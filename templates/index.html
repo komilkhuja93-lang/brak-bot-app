@@ -15,9 +15,7 @@
             --primary-color: #3b82f6;
         }
         body {
-            /* Автоматически подстраивается под темную/светлую тему Telegram */
-            background-color: var(--tg-theme-secondary-bg-color, var(--bg-color));
-            color: var(--tg-theme-text-color, var(--text-color));
+            background-color: #082069 !important; /* Profpack to'q ko'k rangi */
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 20px 15px;
@@ -97,7 +95,19 @@
 <body>
 
 <div class="container">
-    <h3>Brak Mahsulotni Qayd Etish</h3>
+    <div style="text-align: center; margin-bottom: 25px;">
+            <!-- Profpack Logotipi -->
+            <div style="display: inline-flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; font-size: 38px; font-weight: bold; background-color: #082069; padding: 10px 20px; border-radius: 12px;">
+                <div style="background: linear-gradient(to bottom, #ffffff, #cccccc); padding: 5px 12px; border-radius: 4px; color: #082069; margin-right: 6px;">
+                    Prof
+                </div>
+                <div style="color: #ffffff; padding-right: 5px;">
+                    pack
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 20px; color: #111827;">Brak Mahsulotni Qayd Etish</h3>
+        </div>
 
     <form id="brakForm">
         <div class="form-group">
