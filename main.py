@@ -1,7 +1,7 @@
-import os
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 from flask import Flask, request, render_template
 import telebot
-from telebot.types import InputMediaPhoto
+from telebot.types import InputMediaPhoto, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 import os
 
 # Botingiz tokeni va Test guruhingiz ID sini shu yerga yozasiz
@@ -58,7 +58,12 @@ def submit():
     except Exception as e:
         print(f"Xatolik: {e}")
         return "Xato", 500
-
+@bot.message_handler(commands=['forma'])
+def send_form_button(message):
+    markup = InlineKeyboardMarkup()
+    url = "https://brak-bot-app.onrender.com" 
+    markup.add(InlineKeyboardButton("📝 Brak qayd etish", web_app=WebAppInfo(url=url)))
+    bot.send_message(message.chat.id, "Brak holatini yozish uchun pastdagi tugmani bosing:", reply_markup=markup)
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
