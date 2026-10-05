@@ -186,7 +186,19 @@
             method: 'POST',
             body: formData
         }).then(response => {
-            tg.close();
+            // Ekranni muvaffaqiyatli xabariga almashtirish
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 60px 20px; font-family: sans-serif;">
+                    <h1 style="font-size: 70px; margin: 0;">✅</h1>
+                    <h2 style="color: #10b981;">Yuborildi!</h2>
+                    <p style="color: #6b7280; font-size: 16px; line-height: 1.5;">
+                        Hisobot guruhga tushdi.<br>Tepadagi <b>X</b> tugmasini bosib oynani yoping.
+                    </p>
+                </div>
+            `;
+            // Brauzerni avtomatik yopishga urinish
+            try { tg.close(); } catch(e) {}
+            setTimeout(() => { window.close(); }, 1500);
         }).catch(error => {
             alert("Xatolik yuz berdi. Qaytadan urinib ko'ring.");
             document.getElementById('submitBtn').innerText = "Guruhga yuborish";
