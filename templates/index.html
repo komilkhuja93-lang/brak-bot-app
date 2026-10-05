@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Brak Qayd Etish</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #d1d5db;
+            --primary-color: #3b82f6;
+        }
+        body {
+            /* Автоматически подстраивается под темную/светлую тему Telegram */
+            background-color: var(--tg-theme-secondary-bg-color, var(--bg-color));
+            color: var(--tg-theme-text-color, var(--text-color));
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: var(--tg-theme-bg-color, var(--card-bg));
+            max-width: 500px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            box-sizing: border-box;
+        }
+        h3 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 22px;
+            color: var(--tg-theme-text-color, #111827);
+        }
+        .form-group { margin-bottom: 18px; }
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--tg-theme-hint-color, #4b5563);
+        }
+        input[type="text"], input[type="number"], textarea, input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 15px;
+            background-color: #f9fafb;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+        }
+        
+        /* Исправление для слова "dona", чтобы не перекрывало стрелочки */
+        .input-dona { position: relative; }
+        .input-dona input { padding-right: 65px; }
+        .input-dona .suffix {
+            position: absolute;
+            right: 35px; /* Отодвинули от стрелочек */
+            top: 36px;
+            color: #9ca3af;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            background-color: var(--tg-theme-button-color, var(--primary-color));
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>Brak Mahsulotni Qayd Etish</h3>
+
+    <form id="brakForm">
+        <div class="form-group">
+            <label>📸 Rasm yuklash (maksimum 3 ta):</label>
+            <input type="file" id="photos" accept="image/*" multiple required>
+            <small style="color: #ef4444; display: none; margin-top: 5px;" id="error-msg">Iltimos, ko'pi bilan 3 ta rasm tanlang!</small>
+        </div>
+
+        <div class="form-group">
+            <label>Mahsulot artikuli:</label>
+            <input type="text" id="artikul" placeholder="Masalan: K 5033" required>
+        </div>
+
+        <div class="form-group">
+            <label>Mahsulot nomi:</label>
+            <input type="text" id="nomi" placeholder="Masalan: Yantar" required>
+        </div>
+
+        <div class="form-group input-dona">
+            <label>Gofra Brak:</label>
+            <input type="number" id="gofra" min="0" placeholder="0" required>
+            <span class="suffix">dona</span>
+        </div>
+
+        <div class="form-group input-dona">
+            <label>Printer Brak:</label>
+            <input type="number" id="printer" min="0" placeholder="0" required>
+            <span class="suffix">dona</span>
+        </div>
+
+        <div class="form-group input-dona">
+            <label>Stepler Brak:</label>
+            <input type="number" id="stepler" min="0" placeholder="0" required>
+            <span class="suffix">dona</span>
+        </div>
+
+        <div class="form-group">
+            <label>Izoh:</label>
+            <textarea id="izoh" rows="3" placeholder="Qo'shimcha ma'lumot yozishingiz mumkin..."></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn">Guruhga yuborish</button>
+    </form>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand(); 
+
+    const form = document.getElementById('brakForm');
+    const photoInput = document.getElementById('photos');
+
+    photoInput.addEventListener('change', function() {
+        if (this.files.length > 3) {
+            document.getElementById('error-msg').style.display = 'block';
+            this.value = ''; 
+        } else {
+            document.getElementById('error-msg').style.display = 'none';
+        }
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        document.getElementById('submitBtn').innerText = "Yuborilmoqda...";
+        document.getElementById('submitBtn').disabled = true;
+
+        let formData = new FormData();
+        
+        let user_name = tg.initDataUnsafe?.user?.first_name || "Noma'lum xodim";
+        let user_username = tg.initDataUnsafe?.user?.username || "";
+        if (user_username) user_name += ` (@${user_username})`;
+        
+        formData.append('xodim', user_name);
+        formData.append('artikul', document.getElementById('artikul').value);
+        formData.append('nomi', document.getElementById('nomi').value);
+        formData.append('gofra', document.getElementById('gofra').value);
+        formData.append('printer', document.getElementById('printer').value);
+        formData.append('stepler', document.getElementById('stepler').value);
+        formData.append('izoh', document.getElementById('izoh').value);
+
+        for (let i = 0; i < photoInput.files.length; i++) {
+            formData.append('photos', photoInput.files[i]);
+        }
+
+        fetch('/submit', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            tg.close();
+        }).catch(error => {
+            alert("Xatolik yuz berdi. Qaytadan urinib ko'ring.");
+            document.getElementById('submitBtn').innerText = "Guruhga yuborish";
+            document.getElementById('submitBtn').disabled = false;
+        });
+    });
+</script>
+</body>
+</html>
