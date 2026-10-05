@@ -63,7 +63,8 @@ def send_form_button():
     try:
         markup = InlineKeyboardMarkup()
         url = "https://brak-bot-app.onrender.com"
-        markup.add(InlineKeyboardButton("📝 Brak qayd etish", web_app=WebAppInfo(url=url)))
+        # Заменили web_app на стандартную ссылку url=url
+        markup.add(InlineKeyboardButton("📝 Brak qayd etish", url=url))
         bot.send_message(GROUP_CHAT_ID, "Brak holatini yozish uchun pastdagi tugmani bosing:", reply_markup=markup)
         return "Tugma guruhga muvaffaqiyatli yuborildi! Telegramni tekshiring."
     except Exception as e:
