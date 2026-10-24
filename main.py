@@ -6,7 +6,7 @@ import os
 
 # Botingiz tokeni va Test guruhingiz ID sini shu yerga yozasiz
 BOT_TOKEN = '8902395002:AAG_5XzbDYMb2qygzVjbweiwvDaCPoNiBeU'
-GROUP_CHAT_ID = '-1003984278331' # Test guruh ID sini yozing
+GROUP_CHAT_ID = '-1003457315659' # Test guruh ID sini yozing
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__)
