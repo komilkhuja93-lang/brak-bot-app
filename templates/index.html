@@ -15,7 +15,7 @@
             --primary-color: #3b82f6;
         }
         body {
-            background-color: #082069 !important; /* Profpack to'q ko'k rangi */
+            background-color: #082069 !important;
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 20px 15px;
@@ -62,19 +62,16 @@
             border-color: var(--primary-color);
             background-color: #ffffff;
         }
-        
-        /* Исправление для слова "dona", чтобы не перекрывало стрелочки */
         .input-dona { position: relative; }
         .input-dona input { padding-right: 65px; }
         .input-dona .suffix {
             position: absolute;
-            right: 35px; /* Отодвинули от стрелочек */
+            right: 35px;
             top: 36px;
             color: #9ca3af;
             font-size: 14px;
             pointer-events: none;
         }
-
         button {
             width: 100%;
             padding: 14px;
@@ -96,24 +93,28 @@
 
 <div class="container">
     <div style="text-align: center; margin-bottom: 25px;">
-            <!-- Profpack Logotipi -->
-            <div style="display: inline-flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; font-size: 38px; font-weight: bold; background-color: #082069; padding: 10px 20px; border-radius: 12px;">
-                <div style="background: linear-gradient(to bottom, #ffffff, #cccccc); padding: 5px 12px; border-radius: 4px; color: #082069; margin-right: 6px;">
-                    Prof
-                </div>
-                <div style="color: #ffffff; padding-right: 5px;">
-                    pack
-                </div>
+        <!-- Profpack Logotipi -->
+        <div style="display: inline-flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; font-size: 38px; font-weight: bold; background-color: #082069; padding: 10px 20px; border-radius: 12px;">
+            <div style="background: linear-gradient(to bottom, #ffffff, #cccccc); padding: 5px 12px; border-radius: 4px; color: #082069; margin-right: 6px;">
+                Prof
             </div>
-            
-            <h3 style="margin-top: 20px; color: #111827;">Brak Mahsulotni Qayd Etish</h3>
+            <div style="color: #ffffff; padding-right: 5px;">
+                pack
+            </div>
         </div>
+        <h3 style="margin-top: 20px; color: #111827;">Brak Mahsulotni Qayd Etish</h3>
+    </div>
 
     <form id="brakForm">
         <div class="form-group">
             <label>📸 Rasm yuklash (maksimum 3 ta):</label>
             <input type="file" id="photos" accept="image/*" multiple required>
             <small style="color: #ef4444; display: none; margin-top: 5px;" id="error-msg">Iltimos, ko'pi bilan 3 ta rasm tanlang!</small>
+        </div>
+        
+        <div class="form-group">
+            <label>👤 Xodimning ismi:</label>
+            <input type="text" id="xodim_ismi" placeholder="Ism va familiyangizni yozing" required>
         </div>
 
         <div class="form-group">
@@ -128,19 +129,19 @@
 
         <div class="form-group input-dona">
             <label>Gofra Brak:</label>
-            <input type="number" id="gofra" min="0" value="0">
+            <input type="number" id="gofra" min="0" value="0" onfocus="if(this.value==='0') this.value='';" onblur="if(this.value==='') this.value='0';">
             <span class="suffix">dona</span>
         </div>
 
         <div class="form-group input-dona">
             <label>Printer Brak:</label>
-            <input type="number" id="printer" min="0" value="0">
+            <input type="number" id="printer" min="0" value="0" onfocus="if(this.value==='0') this.value='';" onblur="if(this.value==='') this.value='0';">
             <span class="suffix">dona</span>
         </div>
 
         <div class="form-group input-dona">
             <label>Stepler Brak:</label>
-            <input type="number" id="stepler" min="0" value="0">
+            <input type="number" id="stepler" min="0" value="0" onfocus="if(this.value==='0') this.value='';" onblur="if(this.value==='') this.value='0';">
             <span class="suffix">dona</span>
         </div>
 
@@ -176,11 +177,9 @@
 
         let formData = new FormData();
         
-        let user_name = tg.initDataUnsafe?.user?.first_name || "Noma'lum xodim";
-        let user_username = tg.initDataUnsafe?.user?.username || "";
-        if (user_username) user_name += ` (@${user_username})`;
-        
+        let user_name = document.getElementById('xodim_ismi').value;
         formData.append('xodim', user_name);
+        
         formData.append('artikul', document.getElementById('artikul').value);
         formData.append('nomi', document.getElementById('nomi').value);
         formData.append('gofra', document.getElementById('gofra').value);
@@ -196,7 +195,6 @@
             method: 'POST',
             body: formData
         }).then(response => {
-            // Ekranni muvaffaqiyatli xabariga almashtirish
             document.body.innerHTML = `
                 <div style="text-align: center; padding: 60px 20px; font-family: sans-serif;">
                     <h1 style="font-size: 70px; margin: 0;">✅</h1>
@@ -206,7 +204,6 @@
                     </p>
                 </div>
             `;
-            // Brauzerni avtomatik yopishga urinish
             try { tg.close(); } catch(e) {}
             setTimeout(() => { window.close(); }, 1500);
         }).catch(error => {
