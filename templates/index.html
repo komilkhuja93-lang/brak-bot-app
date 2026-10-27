@@ -46,7 +46,7 @@
             font-size: 14px;
             color: var(--tg-theme-hint-color, #4b5563);
         }
-        input[type="text"], input[type="number"], textarea, input[type="file"] {
+        input[type="text"], input[type="number"], select, textarea, input[type="file"] {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid var(--border-color);
@@ -57,7 +57,7 @@
             transition: border-color 0.2s;
             font-family: inherit;
         }
-        input:focus, textarea:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary-color);
             background-color: #ffffff;
@@ -93,7 +93,6 @@
 
 <div class="container">
     <div style="text-align: center; margin-bottom: 25px;">
-        <!-- Profpack Logotipi -->
         <div style="display: inline-flex; align-items: center; justify-content: center; font-family: Arial, sans-serif; font-size: 38px; font-weight: bold; background-color: #082069; padding: 10px 20px; border-radius: 12px;">
             <div style="background: linear-gradient(to bottom, #ffffff, #cccccc); padding: 5px 12px; border-radius: 4px; color: #082069; margin-right: 6px;">
                 Prof
@@ -118,6 +117,16 @@
         </div>
 
         <div class="form-group">
+            <label>🏢 Qaysi bo'limdan yuborilyapti?</label>
+            <select id="bolim" required>
+                <option value="" disabled selected>Bo'limni tanlang...</option>
+                <option value="PRINTER BO'LIMI">PRINTER BO'LIMI</option>
+                <option value="STEPLER BO'LIMI">STEPLER BO'LIMI</option>
+                <option value="GOFRA BO'LIMI">GOFRA BO'LIMI</option>
+            </select>
+        </div>
+
+        <div class="form-group">
             <label>Mahsulot artikuli:</label>
             <input type="text" id="artikul" placeholder="Masalan: K 5033" required>
         </div>
@@ -125,6 +134,12 @@
         <div class="form-group">
             <label>Mahsulot nomi:</label>
             <input type="text" id="nomi" placeholder="Masalan: Yantar" required>
+        </div>
+
+        <div class="form-group input-dona">
+            <label>Umumiy mahsulot soni:</label>
+            <input type="number" id="umumiy_soni" min="0" value="0" onfocus="if(this.value==='0') this.value='';" onblur="if(this.value==='') this.value='0';">
+            <span class="suffix">dona</span>
         </div>
 
         <div class="form-group input-dona">
@@ -177,11 +192,11 @@
 
         let formData = new FormData();
         
-        let user_name = document.getElementById('xodim_ismi').value;
-        formData.append('xodim', user_name);
-        
+        formData.append('xodim', document.getElementById('xodim_ismi').value);
+        formData.append('bolim', document.getElementById('bolim').value);
         formData.append('artikul', document.getElementById('artikul').value);
         formData.append('nomi', document.getElementById('nomi').value);
+        formData.append('umumiy_soni', document.getElementById('umumiy_soni').value);
         formData.append('gofra', document.getElementById('gofra').value);
         formData.append('printer', document.getElementById('printer').value);
         formData.append('stepler', document.getElementById('stepler').value);
