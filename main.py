@@ -6,7 +6,7 @@ import os
 
 # Botingiz tokeni va Test guruhingiz ID sini shu yerga yozasiz
 BOT_TOKEN = '8902395002:AAG_5XzbDYMb2qygzVjbweiwvDaCPoNiBeU'
-GROUP_CHAT_ID = '-1003457315659' # Test guruh ID sini yozing
+GROUP_CHAT_ID = '-1003457315659' # Ishxona guruhi ID sini shu yerga yozishni unutmang
 
 bot = telebot.TeleBot(BOT_TOKEN)
 app = Flask(__name__)
@@ -19,8 +19,10 @@ def index():
 def submit():
     # Web App'dan kelgan ma'lumotlarni qabul qilib olish
     xodim = request.form.get('xodim')
+    bolim = request.form.get('bolim') # Yangi qator: Bo'lim
     artikul = request.form.get('artikul')
     nomi = request.form.get('nomi')
+    umumiy_soni = request.form.get('umumiy_soni') # Yangi qator: Umumiy soni
     gofra = request.form.get('gofra')
     printer = request.form.get('printer')
     stepler = request.form.get('stepler')
@@ -29,8 +31,16 @@ def submit():
 
     # Guruhga yuboriladigan chiroyli shablon (Text)
     caption_text = f"📋 <b>Brak mahsulot hisoboti</b>\n\n"
+    
+    if bolim:
+        caption_text += f"🏢 <b>{bolim}</b>\n\n"
+        
     caption_text += f"📦 <b>Mahsulot artikuli:</b> {artikul}\n"
     caption_text += f"🏷 <b>Mahsulot nomi:</b> {nomi}\n\n"
+    
+    if umumiy_soni:
+        caption_text += f"📊 <b>Umumiy mahsulot soni:</b> {umumiy_soni} dona.\n\n"
+        
     caption_text += f"📉 <b>Gofra Brak:</b> {gofra} dona.\n"
     caption_text += f"🖨 <b>Printer Brak:</b> {printer} dona.\n"
     caption_text += f"📎 <b>Stepler Brak:</b> {stepler} dona.\n\n"
@@ -58,6 +68,7 @@ def submit():
     except Exception as e:
         print(f"Xatolik: {e}")
         return "Xato", 500
+
 @app.route('/tugma')
 def send_form_button():
     try:
@@ -69,6 +80,7 @@ def send_form_button():
         return "Tugma guruhga muvaffaqiyatli yuborildi! Telegramni tekshiring."
     except Exception as e:
         return f"Xatolik yuz berdi: {e}"
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
