@@ -39,7 +39,7 @@ def submit():
     caption_text += f"🏷 <b>Mahsulot nomi:</b> {nomi}\n\n"
     
     if umumiy_soni:
-        caption_text += f"📊 <b>Umumiy mahsulot soni:</b> {umumiy_soni} dona.\n\n"
+        caption_text += f"📊 <b>Umumiy soni:</b> {umumiy_soni} dona.\n\n"
         
     caption_text += f"📉 <b>Gofra Brak:</b> {gofra} dona.\n"
     caption_text += f"🖨 <b>Printer Brak:</b> {printer} dona.\n"
